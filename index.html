@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird - Pure JavaScript</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'FlappyFont';
+            src: url('./assets/font/flappy-font.ttf') format('truetype');
+        }
+
+        html,
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            font-family: FlappyFont, sans-serif;
+        }
+
+        #game {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .get-ready,
+        .game-over {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .get-ready,
+        .game-over img {
+            user-select: none
+        }
+
+        .get-ready img {
+            min-width: 18rem;
+        }
+
+        .game-over img {
+            min-width: 15rem;
+        }
+
+        .game-over {
+            display: none;
+        }
+
+        .score {
+            position: absolute;
+            left: 50%;
+            top: 10%;
+            transform: translateX(-50%);
+            font-size: 84px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 4px 4px 0px #000000;
+            -webkit-text-stroke: 2px black;
+            user-select: none
+        }
+    </style>
+</head>
+
+<body>
+    <script src="index.js" type="module"></script>
+    <div id="game">
+        <div class="get-ready" id="get-ready-screen">
+            <img src="./assets/message.png" alt="Get ready screen" />
+        </div>
+        <div class="game-over" id="game-over-screen">
+            <img src="./assets/gameover.png" alt="Game over screen" />
+        </div>
+        <div class="score" id="score">0</div>
+    </div>
+</body>
+
+</html>
