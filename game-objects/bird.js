@@ -26,7 +26,7 @@ class Bird {
         entity.addComponent('controller', new Controller({ jumpForce: 250 }))
         entity.addComponent('spriteRenderer', new SpriteRenderer({
             context: ECS.context,
-            src: '/assets/bird.png',
+            src: './assets/bird.png',
             width: 80,
             height: 50,
             frames: 3,
@@ -36,11 +36,11 @@ class Bird {
         entity.addComponent('collider', new Collider({ layer: 'player', innerOffset: 10 }))
         entity.addComponent('audioSource', new AudioSource({
             audioClips: {
-                point: '/assets/audio/point.wav',
-                hit: '/assets/audio/hit.wav',
-                wing: '/assets/audio/wing.wav',
-                die: '/assets/audio/die.wav',
-                swoosh: '/assets/audio/swoosh.wav'
+                point: './assets/audio/point.wav',
+                hit: './assets/audio/hit.wav',
+                wing: './assets/audio/wing.wav',
+                die: './assets/audio/die.wav',
+                swoosh: './assets/audio/swoosh.wav'
             }
         }))
 

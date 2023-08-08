@@ -57,7 +57,7 @@ class Game {
 
     _build() {
         this.background = new Scrollable(Background, {
-            sprite: '/assets/background.png',
+            sprite: './assets/background.png',
             x: 0,
             y: 0,
             height: this.window.canvas.height,
@@ -70,7 +70,7 @@ class Game {
         this.player = new Bird();
 
         this.pipes = new Scrollable(PipePair, {
-            sprite: '/assets/pipe-green.png',
+            sprite: './assets/pipe-green.png',
             x: this.window.canvas.width - 200,
             height: this.window.canvas.height,
             width: _PIPE_WIDTH,
@@ -81,7 +81,7 @@ class Game {
         });
 
         this.base = new Scrollable(Base, {
-            sprite: '/assets/base.png',
+            sprite: './assets/base.png',
             x: 0,
             y: this.window.canvas.height - _BASE_HEIGHT,
             height: _BASE_HEIGHT,
