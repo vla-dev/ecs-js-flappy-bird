@@ -1,3 +1,5 @@
+export const _LOCAL_STORAGE_KEY = 'flappy-bird-score'
+
 //PARALLAX
 export const _SCROLLABLE_CLONES_COUNT = 10;
 export const _SCROLL_SPEED = 20;

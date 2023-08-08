@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird - Pure JavaScript</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <script src="https://unpkg.com/stats-js@1.0.1/build/stats.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
     <style>
         @font-face {
             font-family: 'FlappyFont';
@@ -67,6 +69,26 @@
             -webkit-text-stroke: 2px black;
             user-select: none
         }
+
+        .best {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 4px 4px 0px #000000;
+            -webkit-text-stroke: 2px black;
+            user-select: none
+        }
+
+        .debug-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -80,6 +102,11 @@
             <img src="./assets/gameover.png" alt="Game over screen" />
         </div>
         <div class="score" id="score">0</div>
+        <div class="best" id="best"></div>
+        <label class="debug-toggle" id="debug">
+            Debug
+            <input type="checkbox"/>
+        </label>
     </div>
 </body>
 

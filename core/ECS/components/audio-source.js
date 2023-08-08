@@ -12,7 +12,13 @@ class AudioSource extends Component {
     }
 
     play(clip) {
-        this.audioClips[clip].play();
+        const audioClip = this.audioClips[clip];
+
+        if (!audioClip.paused) {
+            audioClip.pause();
+        }
+
+        audioClip.play();
     }
 }
 

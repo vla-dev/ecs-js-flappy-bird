@@ -12,6 +12,7 @@ import Scrollable from "./game-objects/scrollable.js";
 import {
     GAME_STATES,
     _BASE_HEIGHT,
+    _LOCAL_STORAGE_KEY,
     _PIPES_GAP,
     _PIPES_SPACE_BETWEEN,
     _PIPE_WIDTH,
@@ -28,9 +29,15 @@ class Game {
         this.name = name
         this.player = null;
         this.score = 0;
+        this.bestScore = Number(localStorage.getItem(_LOCAL_STORAGE_KEY) ?? 0);
+        this.window = new GameWindow('flappy-bird', container);
+        this.debug = false;
+        this.stats = new Stats();
+        
+        document.body.appendChild(this.stats.dom);
+        document.querySelector("#best").innerText = "BEST: " + this.bestScore
 
         InputManager.init();
-        this.window = new GameWindow('flappy-bird', container);
         ECS.setContext(this.window.context);
 
         this._build();
@@ -84,6 +91,7 @@ class Game {
             spaceBetween: 0
         });
 
+        this.nextPipe = this.pipes.clones[0];
         this._registerSystems();
         this._render();
     }
@@ -106,6 +114,10 @@ class Game {
         }
     }
 
+    setDebug(value) {
+        this.debug = value;
+    }
+
     _setGameState(state) {
         _currentGameState = state;
     }
@@ -118,8 +130,10 @@ class Game {
     }
 
     _gameOver() {
-        this.player.getComponent('audioSource').play('hit');
-        this.player.getComponent('audioSource').play('die');
+        const audioSource = this.player.getComponent('audioSource');
+        audioSource.play('hit');
+        audioSource.play('die');
+
         this._setGameState(GAME_STATES.gameOver);
         document.querySelector('#game-over-screen').style.display = 'block';
     }
@@ -129,18 +143,65 @@ class Game {
             this.score = value;
             document.querySelector("#score").innerText = this.score;
         } else {
-
-            if (this.pipes.clones[0].x < this.player.bounds.x + this.player.bounds.width / 2 && this.pipes.clones[0].x > this.player.bounds.x - 100) {
+            if (this.nextPipe.x + _PIPE_WIDTH / 2 < this.player.bounds.x + this.player.bounds.width / 2) {
                 if (!_pipePassed) {
                     this.score++;
                     this.player.getComponent('audioSource').play('point');
+
+                    if (this.score > this.bestScore) {
+                        this.bestScore = this.score;
+                        localStorage.setItem(_LOCAL_STORAGE_KEY, this.bestScore);
+                        document.querySelector("#best").innerText = "BEST: " + this.bestScore
+                    }
+
                     document.querySelector("#score").innerText = this.score;
+
                     _pipePassed = true;
+                    this.nextPipe = this.pipes.clones.find(pipe => pipe.x > this.player.bounds.x + this.player.bounds.width / 2);
                 }
             } else {
                 _pipePassed = false;
             }
         }
+    }
+
+    _onDebug(dt) {
+        // player mid-line
+        this.window.context.save();
+        this.window.context.beginPath();
+        this.window.context.moveTo(this.player.bounds.x + this.player.bounds.width / 2, this.player.bounds.y - 50);
+        this.window.context.lineTo(this.player.bounds.x + this.player.bounds.width / 2, this.player.bounds.y + this.player.bounds.height + 50);
+        this.window.context.strokeStyle = "red";
+        this.window.context.stroke();
+
+        // player bbox
+        this.window.context.strokeStyle = "blue";
+        this.window.context.strokeRect(this.player.bounds.x, this.player.bounds.y, this.player.bounds.width, this.player.bounds.height);
+
+        // render next pipe mid line
+        this.window.context.beginPath();
+        this.window.context.moveTo(this.nextPipe.x + _PIPE_WIDTH / 2, this.nextPipe.y - _PIPES_GAP);
+        this.window.context.lineTo(this.nextPipe.x + _PIPE_WIDTH / 2, this.nextPipe.y + _PIPES_GAP);
+        this.window.context.strokeStyle = "green";
+        this.window.context.stroke();
+
+        // render pipes bbox
+        this.pipes.clones.forEach(pipe => {
+            pipe.entities.forEach(entity => {
+                const { position } = entity.getComponent('transform');
+
+                this.window.context.strokeStyle = "blue";
+                this.window.context.strokeRect(position.x, position.y, pipe.width, pipe.height);
+            })
+        })
+
+        //render base bbox
+        this.base.clones.forEach(base => {
+            this.window.context.strokeStyle = "blue";
+            this.window.context.strokeRect(base.x, base.y, base.width, base.height);
+        })
+
+        this.window.context.restore();
     }
 
     _update(dt) {
@@ -159,10 +220,16 @@ class Game {
 
         this._updateScore();
         this.player.onCollision(() => this._gameOver())
+
+        if (this.debug) {
+            this._onDebug(dt);
+        }
     }
 
     _render() {
         this._animationFrame = requestAnimationFrame(t => {
+            this.stats.begin();
+
             if (_lastRenderTime == null) {
                 _lastRenderTime = t;
             }
@@ -170,6 +237,7 @@ class Game {
             this._update((t - _lastRenderTime) * 0.01);
             _lastRenderTime = t;
 
+            this.stats.end();
             this._render();
         });
     }

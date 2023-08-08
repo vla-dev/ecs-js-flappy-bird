@@ -13,9 +13,9 @@ class PipePair {
         this.width = props.width;
         this.height = props.height;
         this.gap = props.gap || 100;
-        this._entities = this.create(this.x, this.y);
+        this.entities = this.create(this.x, this.y);
 
-        ECS.register(this._entities);
+        ECS.register(this.entities);
     }
 
     create(x, y) {
@@ -50,7 +50,7 @@ class PipePair {
     }
 
     update() {
-        this._entities.forEach(entity => {
+        this.entities.forEach(entity => {
             const { position } = entity.getComponent('transform');
             position.x = this.x;
         })
