@@ -21,6 +21,7 @@ class Scrollable {
             if (this.clones[0].x + this.clones[0].width <= 0) {
                 const firstClone = this.clones.shift();
                 firstClone.x = this.clones[this.clones.length - 1].x + firstClone.width + this.spaceBetween;
+                firstClone.y = firstClone.randomY || firstClone.y;
                 this.clones.push(firstClone);
             }
         }

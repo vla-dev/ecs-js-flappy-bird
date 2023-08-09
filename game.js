@@ -33,7 +33,7 @@ class Game {
         this.window = new GameWindow('flappy-bird', container);
         this.debug = false;
         this.stats = new Stats();
-        
+
         document.body.appendChild(this.stats.dom);
         document.querySelector("#best").innerText = "BEST: " + this.bestScore
 

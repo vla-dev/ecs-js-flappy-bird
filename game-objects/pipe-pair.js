@@ -9,7 +9,7 @@ class PipePair {
     constructor(props) {
         this.sprite = props.sprite;
         this.x = props.x || 0;
-        this.y = props.y || randomBetween(150, ECS.context.canvas.height - _BASE_HEIGHT - 150);
+        this.y = props.y || this.randomY;
         this.width = props.width;
         this.height = props.height;
         this.gap = props.gap || 100;
@@ -54,6 +54,10 @@ class PipePair {
             const { position } = entity.getComponent('transform');
             position.x = this.x;
         })
+    }
+
+    get randomY() {
+        return randomBetween(150, ECS.context.canvas.height - _BASE_HEIGHT - 150)
     }
 }
 
